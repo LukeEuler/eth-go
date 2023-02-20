@@ -2,6 +2,7 @@ package eg
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/LukeEuler/dolly/log"
 
@@ -15,6 +16,26 @@ func Lucky() {
 	if !conf.Lucky {
 		return
 	}
+
+	num := conf.Goroutine
+	if num < 1 {
+		num = 1
+	}
+	var wg sync.WaitGroup
+
+	for i := 0; i < num; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			generateLuckyAddr()
+		}()
+
+	}
+
+	wg.Wait()
+}
+
+func generateLuckyAddr() {
 	for {
 		k, err := key.NewKey()
 		if err != nil {

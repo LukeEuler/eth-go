@@ -13,8 +13,9 @@ import (
 var conf = new(config)
 
 type config struct {
-	Lucky bool `toml:"lucky"`
-	Net   struct {
+	Lucky     bool `toml:"lucky"`
+	Goroutine int  `toml:"goroutine"`
+	Net       struct {
 		ChainID int64  `toml:"chain_id"`
 		URL     string `toml:"url"`
 		Show    string `toml:"show"`
