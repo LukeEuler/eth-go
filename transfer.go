@@ -83,13 +83,15 @@ func transfer(tf *config.Transfer) {
 	}
 
 	to := common.HexToAddress(tf.To)
-	tx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		GasPrice: big.NewInt(tf.GasPrice),
-		Gas:      tf.GasLimit,
-		To:       &to,
-		Value:    amount,
-		Data:     nil,
+
+	tx := types.NewTx(&types.DynamicFeeTx{
+		Nonce:     nonce,
+		GasTipCap: big.NewInt(0).SetUint64(tf.MaxPriorityFeePerGas),
+		GasFeeCap: big.NewInt(0).SetUint64(tf.MaxFeePerGas),
+		Gas:       tf.GasLimit,
+		To:        &to,
+		Value:     amount,
+		Data:      nil,
 	})
 
 	tx, err = types.SignTx(tx, signer, key.ToECDSA())
@@ -141,13 +143,14 @@ func transfer_mpc(tf *config.Transfer) {
 	}
 
 	to := common.HexToAddress(tf.To)
-	tx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		GasPrice: big.NewInt(tf.GasPrice),
-		Gas:      tf.GasLimit,
-		To:       &to,
-		Value:    amount,
-		Data:     nil,
+	tx := types.NewTx(&types.DynamicFeeTx{
+		Nonce:     nonce,
+		GasTipCap: big.NewInt(0).SetUint64(tf.MaxPriorityFeePerGas),
+		GasFeeCap: big.NewInt(0).SetUint64(tf.MaxFeePerGas),
+		Gas:       tf.GasLimit,
+		To:        &to,
+		Value:     amount,
+		Data:      nil,
 	})
 
 	h := signer.Hash(tx)
@@ -228,11 +231,12 @@ func createContract(tf *config.Transfer) {
 	if err != nil {
 		log.Entry.Fatal(err)
 	}
-	tx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		GasPrice: big.NewInt(tf.GasPrice),
-		Gas:      tf.GasLimit,
-		Data:     dataBs,
+	tx := types.NewTx(&types.DynamicFeeTx{
+		Nonce:     nonce,
+		GasTipCap: big.NewInt(0).SetUint64(tf.MaxPriorityFeePerGas),
+		GasFeeCap: big.NewInt(0).SetUint64(tf.MaxFeePerGas),
+		Gas:       tf.GasLimit,
+		Data:      dataBs,
 	})
 
 	tx, err = types.SignTx(tx, signer, key.ToECDSA())
@@ -299,13 +303,14 @@ func transferToken(tf *config.Transfer) {
 	}
 
 	to := common.HexToAddress(tf.Contract)
-	tx := types.NewTx(&types.LegacyTx{
-		Nonce:    nonce,
-		GasPrice: big.NewInt(tf.GasPrice),
-		Gas:      tf.GasLimit,
-		To:       &to,
-		Value:    big.NewInt(0),
-		Data:     dataBs,
+	tx := types.NewTx(&types.DynamicFeeTx{
+		Nonce:     nonce,
+		GasTipCap: big.NewInt(0).SetUint64(tf.MaxPriorityFeePerGas),
+		GasFeeCap: big.NewInt(0).SetUint64(tf.MaxFeePerGas),
+		Gas:       tf.GasLimit,
+		To:        &to,
+		Value:     big.NewInt(0),
+		Data:      dataBs,
 	})
 
 	tx, err = types.SignTx(tx, signer, key.ToECDSA())

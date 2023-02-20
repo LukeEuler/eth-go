@@ -36,11 +36,13 @@ type config struct {
 }
 
 type Transfer struct {
-	Enable   bool   `toml:"enable"`
-	From     string `toml:"from"`
-	To       string `toml:"to"`
-	GasPrice int64  `toml:"gas_price"`
-	GasLimit uint64 `toml:"gas_limit"`
+	Enable               bool   `toml:"enable"`
+	From                 string `toml:"from"`
+	To                   string `toml:"to"`
+	GasLimit             uint64 `toml:"gas_limit"`
+	MaxPriorityFeePerGas uint64 `toml:"max_priority_fee_per_gas"`
+	MaxFeePerGas         uint64 `toml:"max_fee_per_gas"`
+
 	Contract string `toml:"contract"`
 	Data     string `toml:"data"`
 	Amount   string `toml:"amount"`
