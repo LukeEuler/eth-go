@@ -29,7 +29,6 @@ func Lucky() {
 			defer wg.Done()
 			generateLuckyAddr()
 		}()
-
 	}
 
 	wg.Wait()
