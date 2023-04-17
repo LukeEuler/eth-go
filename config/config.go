@@ -15,6 +15,7 @@ var conf = new(config)
 type config struct {
 	Lucky     bool `toml:"lucky"`
 	Goroutine int  `toml:"goroutine"`
+	Length    int  `toml:"length"`
 	Net       struct {
 		ChainID int64  `toml:"chain_id"`
 		URL     string `toml:"url"`

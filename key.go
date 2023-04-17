@@ -35,16 +35,31 @@ func Lucky() {
 }
 
 func generateLuckyAddr() {
+	length := config.Get().Length
 	for {
 		k, err := key.NewKey()
 		if err != nil {
 			log.Fatal(err)
 		}
 		p, a := k.PrivateKey(), k.Address()
-		if a[0] == a[1] && a[0] == a[2] && a[0] == a[3] && a[0] == a[4] && a[0] == a[5] {
-			fmt.Printf("%s %s\n", p, a)
+		l := luckyLength(a)
+		if l >= length {
+			fmt.Printf("%d %s %s\n", l, p, a)
 		}
 	}
+}
+
+func luckyLength(content string) int {
+	if len(content) == 0 {
+		return 0
+	}
+	a := content[0]
+	for i := range content {
+		if content[i] != a {
+			return i
+		}
+	}
+	return len(content)
 }
 
 func NewKeys() {
