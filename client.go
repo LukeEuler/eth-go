@@ -20,7 +20,7 @@ func initClient() {
 		var err error
 		node, err = rpc.DialInsecureSkipVerify(conf.Net.URL, "", "", rpc.JSONRPCVersion2)
 		if err != nil {
-			log.Fatal(err)
+			log.Entry.Fatal(err)
 		}
 	}
 	once.Do(f)

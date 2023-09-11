@@ -39,7 +39,7 @@ func generateLuckyAddr() {
 	for {
 		k, err := key.NewKey()
 		if err != nil {
-			log.Fatal(err)
+			log.Entry.Fatal(err)
 		}
 		p, a := k.PrivateKey(), k.Address()
 		l := luckyLength(a)
@@ -70,7 +70,7 @@ func NewKeys() {
 	for i := 0; i < conf.Keys.Number; i++ {
 		k, err := key.NewKey()
 		if err != nil {
-			log.Fatal(err)
+			log.Entry.Fatal(err)
 		}
 		fmt.Printf("%s %s\n", k.PrivateKey(), k.Address())
 	}

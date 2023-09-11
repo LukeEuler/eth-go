@@ -31,7 +31,7 @@ func getBalance(address string) {
 	var res string
 	err := node.SyncCall(&res, "eth_getBalance", "0x"+address, "latest")
 	if err != nil {
-		log.Fatal(errors.Wrapf(err, "address: %s", address))
+		log.Entry.Fatal(errors.Wrapf(err, "address: %s", address))
 	}
 
 	amount, ok := big.NewInt(0).SetString(common.FormatHex(res), 16)
@@ -41,7 +41,7 @@ func getBalance(address string) {
 	fmt.Printf("%s balance:\n", address)
 	ra, err := dcommon.Cut(amount.String(), 18, 8)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 	fmt.Printf("  %s %s ETH\n", amount, ra)
 
@@ -58,7 +58,7 @@ func getBalance(address string) {
 
 			err = node.SyncCall(&res, "eth_call", buildBaseEthCallParams("0x"+contract, data), "latest")
 			if err != nil {
-				log.Fatal(err)
+				log.Entry.Fatal(err)
 			}
 			raw := common.FormatHex(res)
 			amount = big.NewInt(0)

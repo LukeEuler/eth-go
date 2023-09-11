@@ -66,13 +66,13 @@ func transfer(tf *config.Transfer) {
 	}
 	key, err := key.NewKeyFromHex(privateKey)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 	initClient()
 
 	nonce, err := getNonce(tf.From)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 
 	signer := types.NewLondonSigner(big.NewInt(conf.Net.ChainID))
@@ -132,7 +132,7 @@ func transfer_mpc(tf *config.Transfer) {
 
 	nonce, err := getNonce(tf.From)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 
 	signer := types.NewLondonSigner(big.NewInt(conf.Net.ChainID))
@@ -215,13 +215,13 @@ func createContract(tf *config.Transfer) {
 	}
 	key, err := key.NewKeyFromHex(privateKey)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 	initClient()
 
 	nonce, err := getNonce(tf.From)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 
 	signer := types.NewLondonSigner(big.NewInt(conf.Net.ChainID))
@@ -281,13 +281,13 @@ func transferToken(tf *config.Transfer) {
 	}
 	key, err := key.NewKeyFromHex(privateKey)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 	initClient()
 
 	nonce, err := getNonce(tf.From)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 
 	signer := types.NewLondonSigner(big.NewInt(conf.Net.ChainID))
@@ -299,7 +299,7 @@ func transferToken(tf *config.Transfer) {
 
 	dataBs, err := buildTokenTransferData(tf.To, amount)
 	if err != nil {
-		log.Fatal(err)
+		log.Entry.Fatal(err)
 	}
 
 	to := common.HexToAddress(tf.Contract)
