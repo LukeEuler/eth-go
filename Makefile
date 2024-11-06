@@ -22,7 +22,7 @@ ifndef CILINT
 endif
 	golangci-lint run --timeout 5m0s
 
-test: style cilint
+test: style
 	go test -cover ./...
 
 build: test

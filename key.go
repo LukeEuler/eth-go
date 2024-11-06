@@ -10,12 +10,15 @@ import (
 	"github.com/LukeEuler/eth-go/key"
 )
 
+var luckyLen int
+
 // 靓号生成器
 func Lucky() {
 	conf := config.Get()
 	if !conf.Lucky {
 		return
 	}
+	luckyLen = config.Get().Length
 
 	num := conf.Goroutine
 	if num < 1 {
@@ -35,21 +38,21 @@ func Lucky() {
 }
 
 func generateLuckyAddr() {
-	length := config.Get().Length
 	for {
 		k, err := key.NewKey()
 		if err != nil {
 			log.Entry.Fatal(err)
 		}
 		p, a := k.PrivateKey(), k.Address()
-		l := luckyLength(a)
-		if l >= length {
-			fmt.Printf("%d %s %s\n", l, p, a)
+		l1 := luckyPreLen(a)
+		l2 := luckySufLen(a)
+		if l1 >= luckyLen || l2 >= luckyLen {
+			fmt.Printf("%s\t%s\t%d %d\n", p, a, l1, l2)
 		}
 	}
 }
 
-func luckyLength(content string) int {
+func luckyPreLen(content string) int {
 	if len(content) == 0 {
 		return 0
 	}
@@ -60,6 +63,20 @@ func luckyLength(content string) int {
 		}
 	}
 	return len(content)
+}
+
+func luckySufLen(content string) int {
+	if len(content) == 0 {
+		return 0
+	}
+	ll := len(content)
+	a := content[ll-1]
+	for i := len(content) - 2; i >= 0; i-- {
+		if a != content[i] {
+			return ll - 1 - i
+		}
+	}
+	return ll
 }
 
 func NewKeys() {
