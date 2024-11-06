@@ -44,10 +44,9 @@ func generateLuckyAddr() {
 			log.Entry.Fatal(err)
 		}
 		p, a := k.PrivateKey(), k.Address()
-		l1 := luckyPreLen(a)
-		l2 := luckySufLen(a)
-		if l1 >= luckyLen || l2 >= luckyLen {
-			fmt.Printf("%s\t%s\t%d %d\n", p, a, l1, l2)
+		l := luckyMaxLen(a)
+		if l >= luckyLen {
+			fmt.Printf("%s\t%s\t%d\n", p, a, l)
 		}
 	}
 }
@@ -63,6 +62,31 @@ func luckyPreLen(content string) int {
 		}
 	}
 	return len(content)
+}
+
+func luckyMaxLen(content string) int {
+	if len(content) == 0 {
+		return 0
+	}
+	a := content[0]
+	lm := 1
+	tempLm := lm
+	for i := 1; i < len(content); i++ {
+		if content[i] == a {
+			tempLm++
+			continue
+		}
+		// content[i] != a
+		a = content[i]
+		if tempLm > lm {
+			lm = tempLm
+		}
+		tempLm = 1
+	}
+	if tempLm > lm {
+		lm = tempLm
+	}
+	return lm
 }
 
 func luckySufLen(content string) int {
