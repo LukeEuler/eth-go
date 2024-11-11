@@ -25,6 +25,11 @@ type config struct {
 		Enable bool `toml:"enable"`
 		Number int  `toml:"number"`
 	} `toml:"keys"`
+	Derivation struct {
+		Enable     bool   `toml:"enable"`
+		PrivateKey string `toml:"private_key"`
+		PublicKey  string `toml:"public_key"`
+	} `toml:"derivation"`
 	Balance struct {
 		Enable  bool     `toml:"enable"`
 		Address []string `toml:"address"`

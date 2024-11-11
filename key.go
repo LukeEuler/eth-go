@@ -89,20 +89,6 @@ func luckyMaxLen(content string) int {
 	return lm
 }
 
-func luckySufLen(content string) int {
-	if len(content) == 0 {
-		return 0
-	}
-	ll := len(content)
-	a := content[ll-1]
-	for i := len(content) - 2; i >= 0; i-- {
-		if a != content[i] {
-			return ll - 1 - i
-		}
-	}
-	return ll
-}
-
 func NewKeys() {
 	conf := config.Get()
 	if !conf.Keys.Enable || conf.Keys.Number <= 0 {

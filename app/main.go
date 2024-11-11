@@ -19,6 +19,7 @@ func main() {
 
 	eg.Lucky()
 	eg.NewKeys()
+	eg.Derivation()
 	eg.GetBalance()
 	eg.Transfer()
 }

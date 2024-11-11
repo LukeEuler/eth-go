@@ -68,7 +68,7 @@ func (k *KeyPair) ToECDSA() *ecdsa.PrivateKey {
 	return k.priv
 }
 
-func getAddrByPubkey(publicKey ecdsa.PublicKey) string {
+func GetAddrByPubkey(publicKey ecdsa.PublicKey) string {
 	bs := PubkeyToEthAddressBytes(publicKey)
 	return hex.EncodeToString(bs)
 }
@@ -83,5 +83,5 @@ func getAddrByPublicKeyHex(raw string) (string, error) {
 		X:     pk.X,
 		Y:     pk.Y,
 	}
-	return getAddrByPubkey(stdPK), nil
+	return GetAddrByPubkey(stdPK), nil
 }
