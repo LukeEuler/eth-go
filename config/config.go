@@ -55,9 +55,7 @@ type Transfer struct {
 	Amount   string `toml:"amount"`
 
 	// mpc
-	R     string `toml:"r"`
-	S     string `toml:"s"`
-	RecID uint8  `toml:"recid"`
+	RSV string `toml:"rsv"`
 }
 
 func (t *Transfer) format() {

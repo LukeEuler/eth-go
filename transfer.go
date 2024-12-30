@@ -156,7 +156,7 @@ func transfer_mpc(tf *config.Transfer) {
 	h := signer.Hash(tx)
 
 	needSig := false
-	if len(tf.R) == 0 || len(tf.S) == 0 {
+	if len(tf.RSV) == 0 {
 		needSig = true
 	}
 	if needSig {
@@ -165,13 +165,16 @@ func transfer_mpc(tf *config.Transfer) {
 		return
 	}
 
-	bs, err := hex.DecodeString(tf.R + tf.S)
+	if len(tf.RSV) != 130 {
+		log.Entry.Fatalf("invalid rsv: %s", tf.RSV)
+	}
+
+	bs, err := hex.DecodeString(tf.RSV)
 	if err != nil {
 		log.Entry.Fatal(err)
 	}
 	sig := []byte{}
 	sig = append(sig, bs...)
-	sig = append(sig, byte(tf.RecID))
 
 	tx, err = tx.WithSignature(signer, sig)
 	if err != nil {
