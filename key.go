@@ -20,13 +20,10 @@ func Lucky() {
 	}
 	luckyLen = config.Get().Length
 
-	num := conf.Goroutine
-	if num < 1 {
-		num = 1
-	}
+	num := max(1, conf.Goroutine)
 	var wg sync.WaitGroup
 
-	for i := 0; i < num; i++ {
+	for range num {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
