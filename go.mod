@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/LukeEuler/dolly v0.0.46
+	github.com/LukeEuler/dolly v0.0.49
 	github.com/ecies/go/v2 v2.0.11
 	github.com/ethereum/go-ethereum v1.15.8
 	github.com/pkg/errors v0.9.1

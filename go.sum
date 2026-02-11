@@ -4,8 +4,8 @@ github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk
 github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/IBM/sarama v1.44.0 h1:puNKqcScjSAgVLramjsuovZrS0nJZFVsrvuUymkWqhE=
 github.com/IBM/sarama v1.44.0/go.mod h1:MxQ9SvGfvKIorbk077Ff6DUnBlGpidiQOtU2vuBaxVw=
-github.com/LukeEuler/dolly v0.0.46 h1:yrMGLYXAgejr8MgJo7SaLqRZCdc1asaR1kxSZfTx8RM=
-github.com/LukeEuler/dolly v0.0.46/go.mod h1:PXsObWrkuiL2ey6uXlEljPbjZmhd5nfv/jdbNd4a7pY=
+github.com/LukeEuler/dolly v0.0.49 h1:9uVkRX+etpDOlVcGaQR2x9unuLQf0e3PguFpMSy56Yc=
+github.com/LukeEuler/dolly v0.0.49/go.mod h1:PXsObWrkuiL2ey6uXlEljPbjZmhd5nfv/jdbNd4a7pY=
 github.com/StackExchange/wmi v1.2.1 h1:VIkavFPXSjcnS+O8yTq7NI32k0R5Aj+v39y29VYDOSA=
 github.com/StackExchange/wmi v1.2.1/go.mod h1:rcmrprowKIVzvc+NUiLncP2uuArMWLCbu9SBzvHz7e8=
 github.com/VictoriaMetrics/fastcache v1.12.2 h1:N0y9ASrJ0F6h0QaC3o6uJb3NIZ9VKLjCM7NQbSmF7WI=
