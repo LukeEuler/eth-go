@@ -70,6 +70,8 @@ func transfer(tf *config.Transfer) {
 	}
 	initClient()
 
+	maxPriorityFeePerGas, maxFeePerGas := getFeeGas()
+
 	nonce, err := getNonce(tf.From)
 	if err != nil {
 		log.Entry.Fatal(err)
@@ -86,8 +88,8 @@ func transfer(tf *config.Transfer) {
 
 	tx := types.NewTx(&types.DynamicFeeTx{
 		Nonce:     nonce,
-		GasTipCap: big.NewInt(0).SetUint64(conf.Net.MaxPriorityFeePerGas),
-		GasFeeCap: big.NewInt(0).SetUint64(conf.Net.MaxFeePerGas),
+		GasTipCap: maxPriorityFeePerGas,
+		GasFeeCap: maxFeePerGas,
 		Gas:       tf.GasLimit,
 		To:        &to,
 		Value:     amount,
@@ -130,6 +132,8 @@ func transfer_mpc(tf *config.Transfer) {
 	conf := config.Get()
 	initClient()
 
+	maxPriorityFeePerGas, maxFeePerGas := getFeeGas()
+
 	nonce, err := getNonce(tf.From)
 	if err != nil {
 		log.Entry.Fatal(err)
@@ -145,8 +149,8 @@ func transfer_mpc(tf *config.Transfer) {
 	to := common.HexToAddress(tf.To)
 	tx := types.NewTx(&types.DynamicFeeTx{
 		Nonce:     nonce,
-		GasTipCap: big.NewInt(0).SetUint64(conf.Net.MaxPriorityFeePerGas),
-		GasFeeCap: big.NewInt(0).SetUint64(conf.Net.MaxFeePerGas),
+		GasTipCap: maxPriorityFeePerGas,
+		GasFeeCap: maxFeePerGas,
 		Gas:       tf.GasLimit,
 		To:        &to,
 		Value:     amount,
@@ -222,6 +226,8 @@ func createContract(tf *config.Transfer) {
 	}
 	initClient()
 
+	maxPriorityFeePerGas, maxFeePerGas := getFeeGas()
+
 	nonce, err := getNonce(tf.From)
 	if err != nil {
 		log.Entry.Fatal(err)
@@ -236,8 +242,8 @@ func createContract(tf *config.Transfer) {
 	}
 	tx := types.NewTx(&types.DynamicFeeTx{
 		Nonce:     nonce,
-		GasTipCap: big.NewInt(0).SetUint64(conf.Net.MaxPriorityFeePerGas),
-		GasFeeCap: big.NewInt(0).SetUint64(conf.Net.MaxFeePerGas),
+		GasTipCap: maxPriorityFeePerGas,
+		GasFeeCap: maxFeePerGas,
 		Gas:       tf.GasLimit,
 		Data:      dataBs,
 	})
@@ -288,6 +294,8 @@ func transferToken(tf *config.Transfer) {
 	}
 	initClient()
 
+	maxPriorityFeePerGas, maxFeePerGas := getFeeGas()
+
 	nonce, err := getNonce(tf.From)
 	if err != nil {
 		log.Entry.Fatal(err)
@@ -308,8 +316,8 @@ func transferToken(tf *config.Transfer) {
 	to := common.HexToAddress(tf.Contract)
 	tx := types.NewTx(&types.DynamicFeeTx{
 		Nonce:     nonce,
-		GasTipCap: big.NewInt(0).SetUint64(conf.Net.MaxPriorityFeePerGas),
-		GasFeeCap: big.NewInt(0).SetUint64(conf.Net.MaxFeePerGas),
+		GasTipCap: maxPriorityFeePerGas,
+		GasFeeCap: maxFeePerGas,
 		Gas:       tf.GasLimit,
 		To:        &to,
 		Value:     big.NewInt(0),
@@ -380,4 +388,49 @@ func buildTokenTransferData(to string, amount *big.Int) ([]byte, error) {
 
 	bs, err := hex.DecodeString(raw)
 	return bs, errors.WithStack(err)
+}
+
+func getFeeGas() (*big.Int, *big.Int) {
+	maxPriorityFeePerGas := getMaxPriorityFeePerGas()
+	fmt.Printf("max priority fee/gas:\t%s\n", maxPriorityFeePerGas.String())
+
+	baseFeePerGas := getBaseFeePerGas()
+	fmt.Printf("base fee/gas:\t\t%s\n", baseFeePerGas.String())
+
+	maxFeePerGas := big.NewInt(0).Set(baseFeePerGas)
+	_ = maxFeePerGas.Mul(maxFeePerGas, big.NewInt(2))
+	maxFeePerGas.Add(maxFeePerGas, maxPriorityFeePerGas)
+	fmt.Printf("max fee/gas:\t\t%s\n", maxFeePerGas.String())
+
+	return maxPriorityFeePerGas, maxFeePerGas
+}
+
+func getMaxPriorityFeePerGas() *big.Int {
+	var hexStr string
+	err := node.SyncCall(&hexStr, "eth_maxPriorityFeePerGas")
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+	raw := strings.TrimPrefix(strings.ToLower(hexStr), "0x")
+	v, ok := big.NewInt(0).SetString(raw, 16)
+	if !ok {
+		panic(hexStr)
+	}
+	return v
+}
+
+func getBaseFeePerGas() *big.Int {
+	res := &struct {
+		BaseFeePerGas string `json:"baseFeePerGas"`
+	}{}
+	err := node.SyncCall(res, "eth_getBlockByNumber", "latest", false)
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+	raw := strings.TrimPrefix(strings.ToLower(res.BaseFeePerGas), "0x")
+	v, ok := big.NewInt(0).SetString(raw, 16)
+	if !ok {
+		panic(res.BaseFeePerGas)
+	}
+	return v
 }

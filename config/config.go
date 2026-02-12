@@ -20,9 +20,6 @@ type config struct {
 		ChainID int64  `toml:"chain_id"`
 		URL     string `toml:"url"`
 		Show    string `toml:"show"`
-
-		MaxPriorityFeePerGas uint64 `toml:"max_priority_fee_per_gas"`
-		MaxFeePerGas         uint64 `toml:"max_fee_per_gas"`
 	} `toml:"net"`
 	Keys struct {
 		Enable bool `toml:"enable"`
