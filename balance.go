@@ -28,16 +28,7 @@ func GetBalance() {
 func getBalance(address string) {
 	initClient()
 
-	var res string
-	err := node.SyncCall(&res, "eth_getBalance", "0x"+address, "latest")
-	if err != nil {
-		log.Entry.Fatal(errors.Wrapf(err, "address: %s", address))
-	}
-
-	amount, ok := big.NewInt(0).SetString(common.FormatHex(res), 16)
-	if !ok {
-		log.Entry.Fatalf("invalid value: %s", res)
-	}
+	amount := getEthBalance(address)
 	fmt.Printf("%s balance:\n", address)
 	ra, err := dcommon.Cut(amount.String(), 18, 8)
 	if err != nil {
@@ -55,7 +46,7 @@ func getBalance(address string) {
 				name = list[1]
 			}
 			data := balanceFunc + "000000000000000000000000" + address
-
+			var res string
 			err = node.SyncCall(&res, "eth_call", buildBaseEthCallParams("0x"+contract, data), "latest")
 			if err != nil {
 				log.Entry.Fatal(err)
@@ -63,7 +54,7 @@ func getBalance(address string) {
 			raw := common.FormatHex(res)
 			amount = big.NewInt(0)
 			if len(raw) > 0 {
-				_, ok = amount.SetString(raw, 16)
+				_, ok := amount.SetString(raw, 16)
 				if !ok {
 					log.Entry.Fatalf("invalid value: %s", res)
 				}
@@ -71,4 +62,18 @@ func getBalance(address string) {
 			fmt.Printf("  %s: %s %s\n", contract, amount, name)
 		}
 	}
+}
+
+func getEthBalance(address string) *big.Int {
+	var res string
+	err := node.SyncCall(&res, "eth_getBalance", "0x"+address, "latest")
+	if err != nil {
+		log.Entry.Fatal(errors.Wrapf(err, "address: %s", address))
+	}
+
+	amount, ok := big.NewInt(0).SetString(common.FormatHex(res), 16)
+	if !ok {
+		log.Entry.Fatalf("invalid value: %s", res)
+	}
+	return amount
 }
