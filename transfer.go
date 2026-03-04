@@ -25,7 +25,7 @@ func Transfer() {
 		switch txType {
 		default:
 			unSupportTxTypes = append(unSupportTxTypes, txType)
-		case "eth", "eth_mpc", "token", "NFT", "create_contract":
+		case "eth", "eth_all", "eth_mpc", "token", "NFT", "create_contract":
 		}
 	}
 	if len(unSupportTxTypes) != 0 {
@@ -35,6 +35,11 @@ func Transfer() {
 	tfs := conf.Transfer["eth"]
 	for _, tf := range tfs {
 		transfer(tf)
+	}
+
+	tfs = conf.Transfer["eth_all"]
+	for _, tf := range tfs {
+		transferEthAll(tf)
 	}
 
 	tfs = conf.Transfer["eth_mpc"]
@@ -83,6 +88,81 @@ func transfer(tf *config.Transfer) {
 	if !ok {
 		log.Entry.Fatalf("invalid amount: %s", tf.Amount)
 	}
+
+	to := common.HexToAddress(tf.To)
+
+	tx := types.NewTx(&types.DynamicFeeTx{
+		Nonce:     nonce,
+		GasTipCap: maxPriorityFeePerGas,
+		GasFeeCap: maxFeePerGas,
+		Gas:       tf.GasLimit,
+		To:        &to,
+		Value:     amount,
+		Data:      nil,
+	})
+
+	tx, err = types.SignTx(tx, signer, key.ToECDSA())
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+
+	bs, err := tx.MarshalJSON()
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+	fmt.Println("------------ tx json ------------")
+	fmt.Println(string(bs))
+
+	data, err := tx.MarshalBinary()
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+
+	raw := hexutil.Encode(data)
+	fmt.Println("\n------------ tx raw ------------")
+	fmt.Println(raw)
+	var res string
+	err = node.SyncCall(&res, "eth_sendRawTransaction", raw)
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+
+	fmt.Printf("\n%s/tx/%s\n\n", conf.Net.Show, res)
+}
+
+func transferEthAll(tf *config.Transfer) {
+	if !tf.Enable {
+		return
+	}
+	conf := config.Get()
+
+	privateKey, ok := conf.KeyPair[tf.From]
+	if !ok {
+		log.Entry.Warnf("can not found key for: %s", tf.From)
+		return
+	}
+	key, err := key.NewKeyFromHex(privateKey)
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+	initClient()
+
+	balance := getEthBalance(tf.From)
+
+	maxPriorityFeePerGas, maxFeePerGas := getFeeGas()
+	fee := big.NewInt(0).SetUint64(tf.GasLimit)
+	_ = fee.Mul(fee, maxFeePerGas)
+	amount := big.NewInt(0)
+	_ = amount.Sub(balance, fee)
+
+	fmt.Printf("balance: %s\nfee: %s\namount: %s\n", balance.String(), fee.String(), amount.String())
+
+	nonce, err := getNonce(tf.From)
+	if err != nil {
+		log.Entry.Fatal(err)
+	}
+
+	signer := types.NewLondonSigner(big.NewInt(conf.Net.ChainID))
 
 	to := common.HexToAddress(tf.To)
 
