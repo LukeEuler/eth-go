@@ -20,6 +20,7 @@ type config struct {
 		ChainID int64  `toml:"chain_id"`
 		URL     string `toml:"url"`
 		Show    string `toml:"show"`
+		TinyFee bool   `toml:"tiny_fee"`
 	} `toml:"net"`
 	Keys struct {
 		Enable bool `toml:"enable"`

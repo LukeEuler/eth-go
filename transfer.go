@@ -156,6 +156,9 @@ func transferEthAll(tf *config.Transfer) {
 	_ = amount.Sub(balance, fee)
 
 	fmt.Printf("balance: %s\nfee: %s\namount: %s\n", balance.String(), fee.String(), amount.String())
+	if amount.Sign() <= 0 {
+		return
+	}
 
 	nonce, err := getNonce(tf.From)
 	if err != nil {
@@ -478,7 +481,9 @@ func getFeeGas() (*big.Int, *big.Int) {
 	fmt.Printf("base fee/gas:\t\t%s\n", baseFeePerGas.String())
 
 	maxFeePerGas := big.NewInt(0).Set(baseFeePerGas)
-	_ = maxFeePerGas.Mul(maxFeePerGas, big.NewInt(2))
+	if !config.Get().Net.TinyFee {
+		_ = maxFeePerGas.Mul(maxFeePerGas, big.NewInt(2))
+	}
 	maxFeePerGas.Add(maxFeePerGas, maxPriorityFeePerGas)
 	fmt.Printf("max fee/gas:\t\t%s\n", maxFeePerGas.String())
 
