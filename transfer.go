@@ -155,7 +155,7 @@ func transferEthAll(tf *config.Transfer) {
 	amount := big.NewInt(0)
 	_ = amount.Sub(balance, fee)
 
-	fmt.Printf("balance: %s\nfee: %s\namount: %s\n", balance.String(), fee.String(), amount.String())
+	fmt.Printf("balance:\t\t%s\nfee:\t\t\t%s\namount:\t\t\t%s\n", balance.String(), fee.String(), amount.String())
 	if amount.Sign() <= 0 {
 		return
 	}
