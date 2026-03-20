@@ -24,11 +24,7 @@ func Lucky() {
 	var wg sync.WaitGroup
 
 	for range num {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			generateLuckyAddr()
-		}()
+		wg.Go(generateLuckyAddr)
 	}
 
 	wg.Wait()
