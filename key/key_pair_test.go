@@ -40,7 +40,6 @@ func TestNewKeyFromHex(t *testing.T) {
 }
 
 func Test_GetPublicKeyByPrivHex(t *testing.T) {
-
 	tests := []struct {
 		name       string
 		hexKey     string
@@ -77,7 +76,6 @@ func Test_GetPublicKeyByPrivHex(t *testing.T) {
 }
 
 func Test_getAddrByPublicKeyHex(t *testing.T) {
-
 	tests := []struct {
 		name          string
 		hexPubblicKey string

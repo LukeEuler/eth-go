@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.AddConsoleOut(4)
+	log.AddConsoleOut(5)
 
 	configFile := flag.String("c", "config.toml", "set the config file path")
 	flag.Parse()
