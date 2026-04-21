@@ -12,7 +12,7 @@ cilint:
 ifndef CILINT
 	$(error "golangci-lint is not available please install golangci-lint")
 endif
-	golangci-lint run --timeout 5m0s
+	golangci-lint run
 
 test: cilint
 	go test -cover ./...
